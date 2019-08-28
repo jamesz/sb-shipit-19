@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node src/index.js",
     "extract_with_google": "node src/extract_with_google.js",
+    "extract_with_regex": "node src/extract_with_regex.js",
+    "sample": "node src/sample_files.js",
     "test": "test"
   },
   "author": "",
