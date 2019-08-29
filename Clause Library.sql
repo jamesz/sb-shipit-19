@@ -8,11 +8,12 @@ CREATE TABLE clauses (
  "originalSource" varchar(256) NOT NULL,
  "clauseTitle" varchar(256) NOT NULL,
  "clauseText" text NOT NULL,
- "compareText" text DEFAULT ''
+ "compareText" text DEFAULT '',
+ "created" timestamp DEFAULT NOW()
 );
 
 DELETE FROM clauses;
 */
 
-SELECT * FROM clauses limit 10;
+SELECT * FROM clauses order by "originalSource", "clauseText";
 
