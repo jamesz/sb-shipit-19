@@ -7,14 +7,8 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Debug Extract with Google",
-            "program": "${workspaceFolder}/src/extract_with_google.js"
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Debug Extract with Regex",
-            "program": "${workspaceFolder}/src/extract_with_regex.js"
+            "name": "Launch Program",
+            "program": "${workspaceFolder}/src/index.js"
         }
     ]
 }
