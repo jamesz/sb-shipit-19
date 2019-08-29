@@ -3,17 +3,37 @@ const files = require('./utils/files');
 const clauseLibrary = require('./services/clauseLibrary');
 
 
+function cleanLine(lineText)
+{
+    return lineText;    
+}
+
 function extractClauses(fileName, documentText) {
     log(`${fileName} - extracting clauses with rules`)
+
 
     // 1) a clause always starts with a number
     // 2) the end of the clause 
     //    2.1 is the beginning of another clause
     //    2.2 is a heading/bold text/ starting on a new line
-
     // Handling Anomalies 
     // a) how to ignore table of contents
     // 
+
+    // find index of lines starting with a number
+    const lines = documentText.split('\n');
+    const clauseLineIndexes = [];
+
+    const regexStartsWithNumber = /^\d+/;
+    lines.forEach((line, index) => {
+       const sanitizedLine = cleanLine(line);
+       if (sanitizedLine.match(regexStartsWithNumber)) {
+            clauseLineIndexes.push(index);
+       };
+    });
+
+    clauseLineIndexes.forEach(lineIndex => console.log(lines[lineIndex]));
+//    lines.forEach(line => console.log(line));
 }
 
 function extract() {
