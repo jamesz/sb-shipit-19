@@ -27,40 +27,47 @@ function extractClauses(fileName, documentText) {
 
     // split text file into lines
     const lines = documentText.split('\n');
-    const clauseLineIndexes = [];
+    
     const clauses = []
    
-    // find index of lines starting with a number
-    const regexStartsWithNumber = /^\d+/;
-    lines.forEach((line, index) => {
-       const sanitizedLine = cleanLine(line);
-       if (sanitizedLine.match(regexStartsWithNumber)) {
-            clauseLineIndexes.push(index);
-       };
-    });
+    // find index of lines starting with a number, separated by dot
+    const clauseTitleIndexes = findClauseTitles(lines);
 
     // extract each identified clauses
-    clauseLineIndexes.forEach((clauseLineIndex, i) => {
+    clauseTitleIndexes.forEach((clauseTitleIndex, i) => {
         // 1) ignore all one line clauses as they are too trivial 
         // and the customer can write it themselves, these are also easy 
         // to create if we ever add the ability to add custom clauses
         // 2) extract everything between two potential clause
-        if (clauseLineIndex === lines.length - 1) { // clause is last line
-            clauses.push(lines[clauseLineIndex]); 
-        } else if (clauseLineIndex < lines.length - 2) { // clause line is before or equal second last line
-            if (i === clauseLineIndexes.length - 1) { 
+        if (clauseTitleIndex === lines.length - 1) { // clause is last line
+            clauses.push(lines[clauseTitleIndex]); 
+        } else if (clauseTitleIndex < lines.length - 2) { // clause line is before or equal second last line
+            if (i === clauseTitleIndexes.length - 1) { 
                 // is last clause - extract to end of file
-                extractClause(clauseLineIndex, lines.length - 1, lines, clauses);
-            } else if (i < clauseLineIndexes.length - 1) { 
+                extractClause(clauseTitleIndex, lines.length - 1, lines, clauses);
+            } else if (i < clauseTitleIndexes.length - 1) { 
                 // is not last clause
-                const nextClauseLineIndex = clauseLineIndexes[i+1];
-                extractClause(clauseLineIndex, nextClauseLineIndex - 1, lines, clauses);
+                const nextClauseLineIndex = clauseTitleIndexes[i+1];
+                extractClause(clauseTitleIndex, nextClauseLineIndex - 1, lines, clauses);
             }
         } 
     });
 
     clauses.forEach(clause => console.log(clause, '\n-------------------------------------------------------------------------------------------------------------------------\n'));
     return clauses;
+}
+
+function findClauseTitles(lines) {
+    const clauseTitleIndexes = [];
+    const regexClauseTitle = /^[\d]+.[\w\s]+/;
+    lines.forEach((line, index) => {
+        const sanitizedLine = cleanLine(line);
+        if (sanitizedLine.match(regexClauseTitle)) {
+            clauseTitleIndexes.push(index);
+        }
+        ;
+    });
+    return clauseTitleIndexes;
 }
 
 function extractClause(startLineIndex, endLineIndex, lines, clauses) {
