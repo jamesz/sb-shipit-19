@@ -1,8 +1,8 @@
+const _ = require('lodash');
 const search = require('./integrations/azure_search');
 const {log, logHeader, logDocumentText} = require('./utils/logger');
 const files = require('./utils/files');
 const clauseLibrary = require('./services/clauseLibrary');
-
 
 function cleanLine(lineText)
 {
@@ -61,22 +61,38 @@ function extractClauses(fileName, documentText) {
 function findClauseTitles(lines) {
     // clause titles must
     // 1) start with a number
-    // 2) followed by some text title (can further optimise regex)
+    // 2) followed by some text title (can further optimise regex later)
     // 3) must be sequential, ignore anything that's out of sequence
-    let currentClauseNo;
+    let prevClauseNo;
     const clauseTitleIndexes = [];
-    const regexClauseTitle = /^[\d]+.[\w\s]+/;
+    const regexClauseTitle = /^[\d]+\..[\w\s]+/;
+    const regexClauseNo = /^[\d]+/;
+   
+    // go through each line and decide whether it's a clause title
     lines.forEach((line, index) => {
         const sanitizedLine = cleanLine(line);
-        if (sanitizedLine.match(regexClauseTitle)) {
-            clauseTitleIndexes.push(index);
+        const clauseTitleMatchResult = sanitizedLine.match(regexClauseTitle); 
+        if (clauseTitleMatchResult) {
+            const clauseNumberMatchResult = sanitizedLine.match(regexClauseNo);
+            if (clauseNumberMatchResult) {
+                const currentClauseNo = _.toNumber(clauseNumberMatchResult[0]);
+                // console.log('Prev Clause No:', prevClauseNo);
+                // console.log('Clause No:', JSON.stringify(currentClauseNo));
+                if (clauseTitleIndexes.length === 0) { // first clause title
+                    clauseTitleIndexes.push(index);
+                    prevClauseNo = currentClauseNo;
+                } else if (prevClauseNo > 0 && (currentClauseNo - prevClauseNo === 1)) {
+                    clauseTitleIndexes.push(index);
+                    prevClauseNo = currentClauseNo;
+                } // else skip to next time to continue looking
+            }
         }
     });
     return clauseTitleIndexes;
 }
 
 function extractClause(startLineIndex, endLineIndex, lines, clauses) {
-    if (startLineIndex < endLineIndex) {
+    // if (startLineIndex < endLineIndex) {
         // i.e. not a one liner clause
         const linesInClause = [];
         for (let current = startLineIndex; current <= endLineIndex; current++) {
@@ -84,10 +100,8 @@ function extractClause(startLineIndex, endLineIndex, lines, clauses) {
         }
         const clause = linesInClause.join('\n');
         clauses.push(clause);
-    }
+    // }
 }
-
-
 
 async function extract() {
     logHeader('Starting extraction with rule-based engine');
