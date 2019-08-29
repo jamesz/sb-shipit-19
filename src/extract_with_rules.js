@@ -1,3 +1,4 @@
+const search = require('./integrations/azure_search');
 const {log, logHeader, logDocumentText} = require('./utils/logger');
 const files = require('./utils/files');
 const clauseLibrary = require('./services/clauseLibrary');
@@ -86,18 +87,39 @@ function extractClause(startLineIndex, endLineIndex, lines, clauses) {
     }
 }
 
-function extract() {
+
+
+async function extract() {
     logHeader('Starting extraction with rule-based engine');
 
-    const fileNames = files.getSampleFileNames();
-    // const fileNames = ['sample-one-liners.docx'];
+    //const fileNames = files.getSampleFileNames();
+    const fileNames = ['sample-1.doc', 'sample-2.doc'];
+    const extracts = [];
     fileNames.forEach(fileName => {
         logHeader(fileName);
         const documentText = files.readDocumentText(fileName);
         const clauses = extractClauses(fileName, documentText);
-        clauseLibrary.add(clauses);
+        const payload = {fileName, clauses};
+        extracts.push(payload);
+        //clauseLibrary.add(clauses);
         console.log(`*** ${fileName} - completed extraction!\n`)
-    })
+    });
+
+    log('Starting staging process into search index');
+    const staging = await Promise.all(extracts.map(async extract => {
+        const {fileName, clauses} = extract;
+        log(`${fileName} - staging ${clauses.length} clauses into the clauseLibrary`);
+        const stagingRecords = await clauseLibrary.loadStaging(extract);
+        log(`${fileName} - completed staging ${stagingRecords.length} staging records into the clauseLibrary`);
+        return {fileName, clauseRecords: stagingRecords};
+    }));
+    log('Run indexer');
+    await search.indexStaging();
+
+    await Promise.all(staging.map(async ({fileName, clauseRecords}) => {
+        log(`${fileName} - adding ${clauseRecords.length} clauses into clauseLibrary`);
+        const newClauses = await clauseLibrary.add(clauseRecords);
+    }));
     
     logHeader('All extractions finished!');
 }

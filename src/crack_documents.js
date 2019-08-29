@@ -1,5 +1,5 @@
 const {upload} = require("./integrations/azure_blob_storage");
-const {runIndex, getDocument} = require("./integrations/azure_search");
+const {indexCracker, getDocument} = require("./integrations/azure_search");
 const files = require("./utils/files");
 const {log} = require("./utils/logger");
 const {sleep} = require("./utils/promise_utils");
@@ -15,7 +15,7 @@ async function crack_documents() {
     if (!process.env.DOWNLOAD_ONLY) {
       const promises = fileNames.map(filename => upload(filename));
       await Promise.all(promises);
-      await runIndex();
+      await indexCracker();
     }
 
 

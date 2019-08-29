@@ -23,14 +23,15 @@ function insert(newClauses) {
     console.log('inserting clauses to database');
 }
 
-function createRecord(clauseText) {
+function createRecord(originalSource, clauseText) {
     return {
         id: uuid(), 
         firmId: '1bb77abc-0b57-4934-b1f5-6bb40139c4e1',
         matterCategory: 'EstatePlanning',
         clauseTitle: '',
         clauseText,
-        compareText: ''
+        compareText: '',
+        originalSource
     };
 }
 

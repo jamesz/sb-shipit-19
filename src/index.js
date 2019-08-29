@@ -12,6 +12,8 @@ console.log('*********************************************')
 
 // require('./extract_with_google');
 // require('./extract_with_regex');
+require('dotenv').config();
+console.log(process.env.BLOB_STORAGE);
 require('./extract_with_rules');
 
 

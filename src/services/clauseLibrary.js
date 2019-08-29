@@ -1,24 +1,46 @@
+const blobStorage = require('../integrations/azure_blob_storage');
+const search = require('../integrations/azure_search');
 const clauseDb = require('./clauseDb');
 
-function dedup(rawClauses) {
+async function dedup(clauseRecords) {
+    if (clauseRecords.length === 0) {
+        console.log('skipping empty clauseRecords');
+        return [];
+    }
     console.log('deduplicate clauses');
-    console.log('rawClauses', JSON.stringify(rawClauses));
-    const newClauses = []; // map them the same for now 
+
+    const newClauses = clauseRecords;   // map them the same for now
+
     return newClauses; 
 }
 
-function add(clauses) {
+async function loadStaging({fileName, clauses}) {
     // generate clause records with uuid
-    const clauseRecords = clauses.map(clause => clauseDb.createRecord(clause));
-    
+    const clauseRecords = clauses.map(clause => clauseDb.createRecord(fileName, clause));
     // de-duplicate clauses against database
-    const newClauseRecords = dedup(clauseRecords);
+    const newClauses = await dedup(clauseRecords);
+    // const uploads = await Promise.all(newClauses.map(async clause => {
+    //     const {id} = clause;
+    //     const {clauseText} = await search.getById(id);
+    //
+    //
+    //
+    //     await blobStorage.addStagingBlob({id: clause.id, data: clause});
+    //     return clause;
+    // }));
+    const  uploads = newClauses;
+    return uploads;
+}
+
+function add(clauseRecords) {
+    //const newClauseRecords = dedup(clauseRecords);
 
     // save new clauses to database
-    clauseDb.insert(newClauseRecords);
+    clauseDb.insert(clauseRecords);
 }
 
 module.exports = {
     dedup,
-    add
-}
+    add,
+    loadStaging
+};
