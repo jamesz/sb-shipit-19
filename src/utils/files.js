@@ -1,11 +1,11 @@
-const samplesFolder = './samples';
+const SAMPLES_FOLDER = './samples';
 const fs = require('fs');
 const path = require('path');
 const SUPPORTED_EXTENSIONS = ['.pdf', '.doc', '.docx'];
 const CLEANUP_EXTENSIONS = ['.txt', '.json'];
 
 function getSampleFileNames() {
-    const sampleFileNames = fs.readdirSync(samplesFolder).reduce((acc, fileName) => {
+    const sampleFileNames = fs.readdirSync(SAMPLES_FOLDER).reduce((acc, fileName) => {
         const currentFileExtension = path.extname(fileName).toLowerCase();
         if (SUPPORTED_EXTENSIONS.includes(currentFileExtension)){
             acc.push(fileName);
@@ -17,11 +17,11 @@ function getSampleFileNames() {
 }
 
 function cleanOutputFiles() {
-    fs.readdirSync(samplesFolder).forEach(fileName => {
+    fs.readdirSync(SAMPLES_FOLDER).forEach(fileName => {
         const currentFileExtension = path.extname(fileName).toLowerCase();
         if (CLEANUP_EXTENSIONS.includes(currentFileExtension)){
-            console.log('deleting ', `${samplesFolder}/${fileName}`);
-            fs.unlink(`${samplesFolder}/${fileName}`, (err) => {
+            console.log('deleting ', `${SAMPLES_FOLDER}/${fileName}`);
+            fs.unlink(`${SAMPLES_FOLDER}/${fileName}`, (err) => {
                 console.log(`error occured while cleaning ${fileName}`);
             });
         }
@@ -30,5 +30,6 @@ function cleanOutputFiles() {
 
 module.exports = {
     getSampleFileNames,
-    cleanOutputFiles
+    cleanOutputFiles,
+    SAMPLES_FOLDER
 }
