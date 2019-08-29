@@ -46,7 +46,7 @@ const search = async (searchText, firmId, index = "smb-shipit-clauselib-staging"
     const resp = await axios.post(url, {
         "search": searchText,
         "searchFields": "clauseText",
-        ...firm_search_params(firmId)
+        ...filter_firm(firmId)
     }, config);
 
     return resp.data;
@@ -59,7 +59,7 @@ const moreLikeThis = async (id, firmId, index = "smb-shipit-clauselib-staging") 
         const resp = await axios.post(url, {
             "searchFields": "clauseText",
             "moreLikeThis": id,
-            ...firm_search_params(firmId)
+            ...filter_firm(firmId)
         }, config);
 
         const {value} = resp.data;
@@ -124,7 +124,7 @@ const get_search_config = () => ({
     }
 });
 
-const firm_search_params = (firmId) => ({
+const filter_firm = (firmId) => ({
    "filter": `firmId eq '${firmId}'`
 });
 
