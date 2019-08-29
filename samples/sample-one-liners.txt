@@ -1,0 +1,11 @@
+1. Clause 1
+2. Clause 2
+3. Clause 3
+4. Clause 4
+a. Line 1 for clause 4
+b. Line 1 for clause 4
+c. Line 1 for clause 4
+d. Line 2 for clause 4
+5. [bookmark: _GoBack]Clause 5
+
+
