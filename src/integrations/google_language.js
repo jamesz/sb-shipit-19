@@ -1,5 +1,4 @@
 const {log} = require("../utils/logger");
-const axios = require("axios");
 const language = require("@google-cloud/language");
 
 const analyzeSyntax = async (content) => {

@@ -1,7 +1,7 @@
 const clauseDb = require('./clauseDb');
 
 function dedup(rawClauses) {
-    console.log('deduplicate clauses')
+    console.log('deduplicate clauses');
     const newClauses = []; // map them the same for now 
     return newClauses; 
 }
