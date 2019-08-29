@@ -34,11 +34,7 @@ async function loadStaging({fileName, clauses}) {
 }
 
 function add(clauseRecords) {
-    //const newClauseRecords = dedup(clauseRecords);
-
-    // save new clauses to database
-    const mapped = clauseRecords.map(({originalSource: _, ...rest}) => rest);
-    clauseDb.insert(mapped);
+    clauseDb.insert(clauseRecords);
 }
 
 module.exports = {
