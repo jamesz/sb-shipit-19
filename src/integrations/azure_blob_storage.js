@@ -19,18 +19,18 @@ const upload = (fileName) => {
         reject(err);
       } else {
         log(`${blobName} - uploaded to blob storage`);
-        resolve(get_source_blob_info(fileName));
+        resolve(getBlobInfo(fileName));
       }
     });
   });
 };
 
-const get_source_blob_info = (fileName) => ({
+const getBlobInfo = (fileName) => ({
   blob_name: fileName,
   uri: `${process.env.BLOB_URI}/source/${fileName}`
 });
 
 module.exports = {
   upload,
-  get_source_blob_info
+  getBlobInfo
 };

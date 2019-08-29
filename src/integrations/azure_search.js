@@ -1,9 +1,9 @@
-const {get_source_blob_info} = require('./azure_blob_storage');
+const {getBlobInfo} = require('./azure_blob_storage');
 const {log} = require('../utils/logger');
 const {sleep} = require('../utils/promise_utils');
 const axios = require('axios');
 
-const run_indexer = async () => {
+const runIndex = async () => {
   const url = `${process.env.SEARCH_BASE_URL}/indexers/smb-shipit-cracker/run`;
   const config = get_search_config();
   log('running indexer');
@@ -13,11 +13,11 @@ const run_indexer = async () => {
   await sleep(1000 * 10);
 };
 
-const get_document = async (fileName) => {
+const getDocument = async (fileName) => {
   const url = `${process.env.SEARCH_BASE_URL}/indexes/smb-shipit-cracker/docs/search`;
   const config = get_search_config();
 
-  const {blob_name, uri: blob_uri} = get_source_blob_info(fileName);
+  const {blob_name, uri: blob_uri} = getBlobInfo(fileName);
 
   const resp = await axios.post(url, {
     "search": "",
@@ -50,6 +50,6 @@ const get_search_config = () => ({
 });
 
 module.exports = {
-  run_indexer,
-  get_document
+  runIndex,
+  getDocument
 };
