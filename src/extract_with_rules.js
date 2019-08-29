@@ -77,12 +77,12 @@ function findClauseTitles(lines) {
             const clauseNumberMatchResult = sanitizedLine.match(regexClauseNo);
             if (clauseNumberMatchResult) {
                 const currentClauseNo = _.toNumber(clauseNumberMatchResult[0]);
-                // console.log('Prev Clause No:', prevClauseNo);
-                // console.log('Clause No:', JSON.stringify(currentClauseNo));
-                if (clauseTitleIndexes.length === 0) { // first clause title
+                if (clauseTitleIndexes.length === 0) { 
+                    // always add the first clause title
                     clauseTitleIndexes.push(index);
                     prevClauseNo = currentClauseNo;
                 } else if (prevClauseNo > 0 && (currentClauseNo - prevClauseNo === 1)) {
+                    // add only clause numbers which follow the sequence
                     clauseTitleIndexes.push(index);
                     prevClauseNo = currentClauseNo;
                 } // else skip to next time to continue looking
@@ -93,15 +93,14 @@ function findClauseTitles(lines) {
 }
 
 function extractClause(startLineIndex, endLineIndex, lines, clauses) {
-    // if (startLineIndex < endLineIndex) {
-        // i.e. not a one liner clause
+    if (startLineIndex <= endLineIndex) {
         const linesInClause = [];
         for (let current = startLineIndex; current <= endLineIndex; current++) {
             linesInClause.push(lines[current]);
         }
         const clause = linesInClause.join('\n');
         clauses.push(clause);
-    // }
+    }
 }
 
 async function extract() {
