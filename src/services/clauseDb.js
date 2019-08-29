@@ -10,19 +10,6 @@ const knex = require('knex')({
     searchPath: ['knex', 'public'],
 });
 
-function insert(newClauses) {
-    console.log('query string:', 
-        knex('table').insert({
-            id: uuid(), 
-            firmId: '1bb77abc-0b57-4934-b1f5-6bb40139c4e1',
-            matterCategory: 'EstatePlanning',
-            clauseTitle: 'Test title',
-            clauseText: 'Test Clause Text',
-        }).returning('*').toString()
-    );
-    console.log('inserting clauses to database');
-}
-
 function createRecord(originalSource, clauseText) {
     return {
         id: uuid(), 
@@ -35,7 +22,20 @@ function createRecord(originalSource, clauseText) {
     };
 }
 
+async function insert(clauseRecords) {
+    try
+    {
+        clauseRecords.forEach(async (clauseRecord) => {
+            await knex('clauses').insert(clauseRecord);
+            //console.log('insert called with: ', JSON.stringify(clauseRecord));
+        });
+    }
+    catch (err) {
+        console.log('insert error: ', JSON.stringify(err));
+    }
+}
+
 module.exports = {
+    createRecord,
     insert,
-    createRecord
 }

@@ -1,5 +1,6 @@
 const blobStorage = require('../integrations/azure_blob_storage');
 const search = require('../integrations/azure_search');
+const { log } = require('../utils/logger');
 const clauseDb = require('./clauseDb');
 
 async function dedup(clauseRecords) {

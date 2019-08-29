@@ -91,9 +91,8 @@ function extractClause(startLineIndex, endLineIndex, lines, clauses) {
 
 async function extract() {
     logHeader('Starting extraction with rule-based engine');
-
-    //const fileNames = files.getSampleFileNames();
-    const fileNames = ['sample-1.doc', 'sample-2.doc'];
+    const fileNames = files.getSampleFileNames();
+    // const fileNames = ['sample-1.doc', 'sample-2.doc'];
     const extracts = [];
     fileNames.forEach(fileName => {
         logHeader(fileName);
