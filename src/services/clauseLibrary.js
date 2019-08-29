@@ -37,7 +37,8 @@ function add(clauseRecords) {
     //const newClauseRecords = dedup(clauseRecords);
 
     // save new clauses to database
-    clauseDb.insert(clauseRecords);
+    const mapped = clauseRecords.map(({originalSource: _, ...rest}) => rest);
+    clauseDb.insert(mapped);
 }
 
 module.exports = {
