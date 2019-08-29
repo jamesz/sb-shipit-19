@@ -46,9 +46,9 @@ function readTextFile(textFileName) {
     return '';
 }
 
-function readDocumentText(fileName) {
-    const textFileName = getDocumentTextFileName(fileName);
-    const documentText = readTextFile(textFileName);
+function readDocumentText(sampleFileName) {
+    const documentTextFileName = getDocumentTextFileName(sampleFileName);
+    const documentText = readTextFile(documentTextFileName);
     return documentText;
 }
 
