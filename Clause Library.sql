@@ -9,6 +9,8 @@ CREATE TABLE clauses (
  "clauseText" text NOT NULL,
  "compareText" text DEFAULT ''
 );
+
+DELETE FROM clauses;
 */
 
 SELECT * FROM clauses;
