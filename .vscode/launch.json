@@ -7,8 +7,8 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
-            "program": "${workspaceFolder}/src/index.js"
+            "name": "Debug Extract with Rules",
+            "program": "${workspaceFolder}/src/extract_with_rules.js"
         }
     ]
 }
