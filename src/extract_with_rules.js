@@ -58,6 +58,11 @@ function extractClauses(fileName, documentText) {
 }
 
 function findClauseTitles(lines) {
+    // clause titles must
+    // 1) start with a number
+    // 2) followed by some text title (can further optimise regex)
+    // 3) must be sequential, ignore anything that's out of sequence
+    let currentClauseNo;
     const clauseTitleIndexes = [];
     const regexClauseTitle = /^[\d]+.[\w\s]+/;
     lines.forEach((line, index) => {
@@ -65,7 +70,6 @@ function findClauseTitles(lines) {
         if (sanitizedLine.match(regexClauseTitle)) {
             clauseTitleIndexes.push(index);
         }
-        ;
     });
     return clauseTitleIndexes;
 }

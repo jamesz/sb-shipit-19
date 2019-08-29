@@ -5,11 +5,12 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
+    "database": "node src/database.js",
     "crack_documents": "node src/crack_documents.js",
     "extract_with_google": "node src/extract_with_google.js",
     "extract_with_regex": "node src/extract_with_regex.js",
-    "sample": "node src/sample_files.js",
-    "test": "test"
+    "test": "test",
+    "uuid": "node src/uuid.js"
   },
   "author": "",
   "license": "ISC",
@@ -19,7 +20,8 @@
     "azure-storage": "^2.10.3",
     "dotenv": "^8.1.0",
     "knex": "^0.19.3",
-    "pg": "^7.12.1"
+    "pg": "^7.12.1",
+    "uuid4": "^1.1.4"
   },
   "devDependencies": {
     "sqlite3": "^4.1.0"
