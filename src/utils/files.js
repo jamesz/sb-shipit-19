@@ -31,7 +31,7 @@ function getSampleFileNames() {
     return sampleFileNames;
 }
 
-function getTextFileName(sampleFileName) {
+function getDocumentTextFileName(sampleFileName) {
     const fileNameWithNoExtension = path.basename(sampleFileName, path.extname(sampleFileName));
     return `${fileNameWithNoExtension}${DOC_TEXT_OUTPUT_EXTENSION}`;
 }
@@ -46,12 +46,18 @@ function readTextFile(textFileName) {
     return '';
 }
 
+function readDocumentText(fileName) {
+    const textFileName = getDocumentTextFileName(fileName);
+    const documentText = readTextFile(textFileName);
+    return documentText;
+}
+
 module.exports = {
     SAMPLES_FOLDER,
     DOC_TEXT_OUTPUT_EXTENSION,
     CLAUSE_OUTPUT_EXTENSION,
     cleanOutputFiles,
     getSampleFileNames,
-    getTextFileName,
-    readTextFile,
+    getDocumentTextFileName,
+    readDocumentText,
 }
