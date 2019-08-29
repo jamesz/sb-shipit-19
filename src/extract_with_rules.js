@@ -78,8 +78,8 @@ function extractClause(startLineIndex, endLineIndex, lines, clauses) {
 function extract() {
     logHeader('Starting extraction with rule-based engine');
 
-    // const fileNames = files.getSampleFileNames();
-    const fileNames = ['sample-one-liners.docx'];
+    const fileNames = files.getSampleFileNames();
+    // const fileNames = ['sample-one-liners.docx'];
     fileNames.forEach(fileName => {
         logHeader(fileName);
         const documentText = files.readDocumentText(fileName);
