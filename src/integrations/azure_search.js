@@ -18,25 +18,42 @@ const getDocument = async (fileName) => {
   const config = get_search_config();
 
   const {blob_name, uri: blob_uri} = getBlobInfo(fileName);
+  try {
+    const resp = await axios.post(url, {
+      "search": "",
+      "select": "id, content, languageCode",
+      "filter": `storage_uri eq '${blob_uri}'`
+    }, config).then(response => {
+      if (response.status >= 200 && response.status <= 299) {
+        return response;
+      }
 
-  const resp = await axios.post(url, {
-    "search": "",
-    "select": "id, content, languageCode",
-    "filter": `storage_uri eq '${blob_uri}'`
-  }, config);
+      throw new {
+        status: response.status,
+        data: response.data
+      };
+    });
 
-  if (resp.status !== 200) {
-    log(`${blob_name} - failed while attempting to retrieve document from search index`);
-    return null;
+    if (resp.status !== 200) {
+      log(`${blob_name} - failed while attempting to retrieve document from search index`);
+      return null;
+    }
+
+    const {value} = resp.data;
+    if (!value.length) {
+      log(`${blob_name} - document not found in search index, key: ${blob_uri}`);
+      return null;
+    }
+
+    return {success: true, ...value[0]};
+  } catch (err) {
+    const {message} = err;
+    if (message.includes("status code 503")){
+      return { success: false, status: 503, blob_name, blob_uri };
+    }
+
+    throw err;
   }
-
-  const {value} = resp.data;
-  if (!value) {
-    log(`${blob_name} - document not found in search index`);
-    return null;
-  }
-
-  return value[0];
 };
 
 const get_search_config = () => ({

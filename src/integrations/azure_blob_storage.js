@@ -2,6 +2,7 @@ const {SAMPLES_FOLDER} = require('../utils/files');
 const {log} = require('../utils/logger');
 const path = require('path');
 const storage = require('azure-storage');
+const querystring = require("querystring");
 
 const upload = (fileName) => {
   return new Promise((resolve, reject) => {
@@ -25,10 +26,14 @@ const upload = (fileName) => {
   });
 };
 
-const getBlobInfo = (fileName) => ({
-  blob_name: fileName,
-  uri: `${process.env.BLOB_URI}/source/${fileName}`
-});
+const getBlobInfo = (fileName) => {
+  //const encoded = encodeURIComponent(fileName);
+  const encoded = querystring.escape(fileName);
+  return ({
+    blob_name: fileName,
+    uri: `${process.env.BLOB_URI}/source/${encoded}`
+  });
+};
 
 module.exports = {
   upload,

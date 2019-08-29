@@ -1,32 +1,23 @@
+const {analyzeSyntax} = require("./integrations/google_language");
 const {log, logHeader, logDocumentText} = require('./utils/logger');
-const {crack_document} = require('./integrations');
 const files = require('./utils/files');
 
 require('dotenv').config();
 console.log(process.env.BLOB_STORAGE);
 
-async function extract_text(fileName) {
-    logHeader(fileName);
-    log(`${fileName} - extracting document text with azure text extraction service`);
-    const {id, languageCode, content} = await crack_document('google', fileName);
+async function extract_clauses(fileName, documentText) {
+    log(`${fileName} - extracting clauses with google machine line api`);
+    const blah = await analyzeSyntax(documentText);
 
-    logDocumentText(content);
-    return content;
-}
-
-function extract_clauses(fileName, documentText) {
-    log(`${fileName} - extracting clauses with google machine line api`)
+    log(blah);
 }
 
 function extract() {
-
-    log('Initialising AI');
-    log('Starting extraction');
     log('Loading sample documents');
     const fileNames = files.getSampleFileNames();
     fileNames.forEach(async fileName => {
-        const documentText = await extract_text(fileName);
-        const clauses = extract_clauses(fileName, documentText);
+        const documentText = files.readDocumentText(fileName);
+        const clauses = await extract_clauses(fileName, documentText);
     });
     console.log('Extraction completed!');
 }
