@@ -19,11 +19,11 @@ function extractClauses(fileName, documentText) {
     // Handling Anomalies 
     // a) how to ignore table of contents
     // 
-
-    // find index of lines starting with a number
     const lines = documentText.split('\n');
     const clauseLineIndexes = [];
-
+    const clauses = []
+   
+    // find index of lines starting with a number
     const regexStartsWithNumber = /^\d+/;
     lines.forEach((line, index) => {
        const sanitizedLine = cleanLine(line);
@@ -31,9 +31,28 @@ function extractClauses(fileName, documentText) {
             clauseLineIndexes.push(index);
        };
     });
+    // clauseLineIndexes.forEach(lineIndex => console.log(lines[lineIndex]));
 
-    clauseLineIndexes.forEach(lineIndex => console.log(lines[lineIndex]));
-//    lines.forEach(line => console.log(line));
+    // extract all clauses
+    clauseLineIndexes.forEach((clauseLineIndex, i) => {
+        // 1) ignore all one line clauses as they are too trivial 
+        // and the customer can write it themselves, these are also easy 
+        // to create if we ever add the ability to add custom clauses
+        // 2) extract everything between two potential clause
+        if (clauseLineIndex === lines.length) {
+            clauses.push(lines[clauseLineIndex]); // last line
+        } else if (clauseLineIndex < lines.length - 1 && i < clauseLineIndexes.length - 1) {
+            const linesInClause = []
+            const nextClauseLineIndex = clauseLineIndexes[i+1];
+            for(let current = clauseLineIndex; current < nextClauseLineIndex; current++) {
+                linesInClause.push(lines[current]);
+            }
+            const clause = linesInClause.join('\n');
+            clauses.push(clause);
+        }
+    });
+
+    clauses.forEach(clause => console.log(clause, '\n----------\n'));
 }
 
 function extract() {
