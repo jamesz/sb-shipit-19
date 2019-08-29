@@ -1,20 +1,11 @@
-const SAMPLES_FOLDER = './samples';
+
 const fs = require('fs');
 const path = require('path');
-const SUPPORTED_EXTENSIONS = ['.pdf', '.doc', '.docx'];
+const SAMPLES_FOLDER = './samples';
 const CLEANUP_EXTENSIONS = ['.txt', '.json'];
-
-function getSampleFileNames() {
-    const sampleFileNames = fs.readdirSync(SAMPLES_FOLDER).reduce((acc, fileName) => {
-        const currentFileExtension = path.extname(fileName).toLowerCase();
-        if (SUPPORTED_EXTENSIONS.includes(currentFileExtension)){
-            acc.push(fileName);
-        }
-        return acc;
-    }, []);
-    console.log(JSON.stringify(sampleFileNames));
-    return sampleFileNames;
-}
+const SUPPORTED_EXTENSIONS = ['.pdf', '.doc', '.docx'];
+const DOC_TEXT_OUTPUT_EXTENSION = '.txt';
+const CLAUSE_OUTPUT_EXTENSION = '.json';
 
 function cleanOutputFiles() {
     fs.readdirSync(SAMPLES_FOLDER).forEach(fileName => {
@@ -28,8 +19,39 @@ function cleanOutputFiles() {
     });
 }
 
+function getSampleFileNames() {
+    const sampleFileNames = fs.readdirSync(SAMPLES_FOLDER).reduce((acc, fileName) => {
+        const currentFileExtension = path.extname(fileName).toLowerCase();
+        if (SUPPORTED_EXTENSIONS.includes(currentFileExtension)){
+            acc.push(fileName);
+        }
+        return acc;
+    }, []);
+    console.log(JSON.stringify(sampleFileNames));
+    return sampleFileNames;
+}
+
+function getTextFileName(sampleFileName) {
+    const fileNameWithNoExtension = path.basename(sampleFileName, path.extname(sampleFileName));
+    return `${fileNameWithNoExtension}${DOC_TEXT_OUTPUT_EXTENSION}`;
+}
+
+function readTextFile(textFileName) {
+    const textFilePath = `${SAMPLES_FOLDER}/${textFileName}`;
+    if (fs.existsSync(textFilePath))
+    {
+        return fs.readFileSync(textFilePath, "utf8");
+    }
+
+    return '';
+}
+
 module.exports = {
-    getSampleFileNames,
+    SAMPLES_FOLDER,
+    DOC_TEXT_OUTPUT_EXTENSION,
+    CLAUSE_OUTPUT_EXTENSION,
     cleanOutputFiles,
-    SAMPLES_FOLDER
+    getSampleFileNames,
+    getTextFileName,
+    readTextFile,
 }

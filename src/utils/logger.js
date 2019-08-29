@@ -10,7 +10,12 @@ function logHeader(message) {
     console.log(`**********${'*'.repeat(message.length)}**********`);
 }
 
+function logDocumentText(documentText) {
+    console.log(documentText);
+}
+
 module.exports = {
     log,
-    logHeader
+    logHeader,
+    logDocumentText,
 }

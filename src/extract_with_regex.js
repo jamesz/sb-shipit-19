@@ -1,9 +1,11 @@
-const {log, logHeader} = require('./utils/logger');
+const {log, logHeader, logDocumentText} = require('./utils/logger');
 const files = require('./utils/files');
 
 function extract_text(fileName) {
     log(`${fileName} - extracting document text`)
-    const documentText = '......';
+    const textFileName = files.getTextFileName(fileName);
+    const documentText = files.readTextFile(textFileName);
+    logDocumentText(documentText);
     return documentText;
 }
 
@@ -15,7 +17,7 @@ function extract() {
     logHeader('Starting extraction with REGEX');
 
     // clean up existing output files
-    files.cleanOutputFiles();
+    //files.cleanOutputFiles();
 
     // perform extract on all supported sample files
     const fileNames = files.getSampleFileNames();
