@@ -52,6 +52,12 @@ function readDocumentText(fileName) {
     return documentText;
 }
 
+function writeDocumentText(fileName, documentText) {
+    const destFileName = getDocumentTextFileName(fileName);
+    const destFilePath = `${SAMPLES_FOLDER}/${destFileName}`;
+    fs.writeFileSync(destFilePath, documentText, "utf8");
+}
+
 module.exports = {
     SAMPLES_FOLDER,
     DOC_TEXT_OUTPUT_EXTENSION,
@@ -60,4 +66,5 @@ module.exports = {
     getSampleFileNames,
     getDocumentTextFileName,
     readDocumentText,
+    writeDocumentText
 }
