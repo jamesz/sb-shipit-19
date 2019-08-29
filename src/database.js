@@ -6,4 +6,4 @@ spread over multiple
 lines.
 `);
 
-clauseDb.insert(testRecord);
+clauseDb.insert([testRecord]);

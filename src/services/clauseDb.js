@@ -21,11 +21,17 @@ function createRecord(clauseText) {
     };
 }
 
-function insert(clauseRecord) {
-    knex('clauses').insert(clauseRecord).then((result) => {
-        console.log('insert called with: ', JSON.stringify(clauseRecord));
-        console.log('insert result: ', result);
-    });
+async function insert(clauseRecords) {
+    try
+    {
+        clauseRecords.forEach(async (clauseRecord) => {
+            await knex('clauses').insert(clauseRecord);
+            //console.log('insert called with: ', JSON.stringify(clauseRecord));            
+        });
+    }
+    catch (err) {
+        console.log('insert error: ', JSON.stringify(err));
+    }
 }
 
 module.exports = {
