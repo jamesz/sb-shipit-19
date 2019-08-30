@@ -22,7 +22,8 @@ async function dedup(clauseRecords) {
                 await sleep(1000 * index);
                 searchResult = await search.search(clauseText, firmId);
             }
-            throw err;
+            log(err);
+            return {id, score: 0, clause};
         }
         const score = Math.max(...searchResult.value.map(res => res["@search.score"]));
 
