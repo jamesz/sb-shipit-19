@@ -107,7 +107,7 @@ async function findNewClauses(extracts) {
     return await Promise.all(extracts.map(async (extract, index) => {
         const { fileName, clauses } = extract;
         log(`${fileName} - staging ${clauses.length} clauses into the clauseLibrary`);
-        await sleep(30 * 1000 * index);
+        await sleep(10 * 1000 * index);
         const stagingRecords = await clauseLibrary.loadStaging(extract);
         log(`${fileName} - completed staging ${stagingRecords.length} staging records into the clauseLibrary`);
         if (stagingRecords.length > 0) {
