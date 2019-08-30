@@ -137,14 +137,14 @@ async function extract() {
     });
 
     // dudup against existing index to find only new clauses
-    // log('Starting staging process into search index');
-    // const staging = await findNewClauses(extracts);
+    log('Starting staging process into search index');
+    const staging = await findNewClauses(extracts);
 
-    // // add new clauses to clause library
-    // await Promise.all(staging.map(async ({fileName, clauseRecords}) => {
-    //     log(`${fileName} - adding ${clauseRecords.length} new clauses into the clauseLibrary`);
-    //     const newClauses = await clauseLibrary.add(clauseRecords);
-    // }));
+    // add new clauses to clause library
+    await Promise.all(staging.map(async ({fileName, clauseRecords}) => {
+        log(`${fileName} - adding ${clauseRecords.length} new clauses into the clauseLibrary`);
+        const newClauses = await clauseLibrary.add(clauseRecords);
+    }));
     
     logHeader('All extractions finished!');
 }
