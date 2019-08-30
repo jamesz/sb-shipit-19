@@ -58,6 +58,17 @@ function writeDocumentText(fileName, documentText) {
     fs.writeFileSync(destFilePath, documentText, "utf8");
 }
 
+function getClausesFileName(sampleFileName) {
+    const fileNameWithNoExtension = path.basename(sampleFileName, path.extname(sampleFileName));
+    return `${fileNameWithNoExtension}${CLAUSE_OUTPUT_EXTENSION}`;
+}
+
+function writeClausesToFile(fileName, clausesJson) {
+    const destFileName = getClausesFileName(fileName);
+    const destFilePath = `${SAMPLES_FOLDER}/${destFileName}`;
+    fs.writeFileSync(destFilePath, JSON.stringify(clausesJson, null, 4), "utf8");
+}
+
 module.exports = {
     SAMPLES_FOLDER,
     DOC_TEXT_OUTPUT_EXTENSION,
@@ -66,5 +77,7 @@ module.exports = {
     getSampleFileNames,
     getDocumentTextFileName,
     readDocumentText,
-    writeDocumentText
+    writeDocumentText,
+    getClausesFileName,
+    writeClausesToFile
 }

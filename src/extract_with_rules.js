@@ -103,43 +103,51 @@ function extractClause(startLineIndex, endLineIndex, lines, clauses) {
     }
 }
 
+async function findNewClauses(extracts) {
+    return await Promise.all(extracts.map(async (extract, index) => {
+        const { fileName, clauses } = extract;
+        log(`${fileName} - staging ${clauses.length} clauses into the clauseLibrary`);
+        await sleep(30 * 1000 * index);
+        const stagingRecords = await clauseLibrary.loadStaging(extract);
+        log(`${fileName} - completed staging ${stagingRecords.length} staging records into the clauseLibrary`);
+        if (stagingRecords.length > 0) {
+            log(`${fileName} - Running indexer`);
+            await search.indexStaging();
+        }
+        return { fileName, clauseRecords: stagingRecords };
+    }));
+}
+
 async function extract() {
-    logHeader('Starting extraction with rule-based engine');
     const fileNames = files.getSampleFileNames();
     // const fileNames = ['sample-1.doc', 'sample-2.doc'];
+
+    logHeader('Starting extraction with rule-based engine');
+
+    // for each sample document
     const extracts = [];
     fileNames.forEach(fileName => {
         logHeader(fileName);
         const documentText = files.readDocumentText(fileName);
         const clauses = extractClauses(fileName, documentText);
         const payload = {fileName, clauses};
+        files.writeClausesToFile(fileName, payload);
         extracts.push(payload);
-
         console.log(`*** ${fileName} - completed extraction!\n`)
     });
 
-    log('Starting staging process into search index');
-    const staging = await Promise.all(extracts.map(async (extract, index) => {
-        const {fileName, clauses} = extract;
-        log(`${fileName} - staging ${clauses.length} clauses into the clauseLibrary`);
-        await sleep(30 * 1000 * index);
-        const stagingRecords = await clauseLibrary.loadStaging(extract);
-        log(`${fileName} - completed staging ${stagingRecords.length} staging records into the clauseLibrary`);
+    // dudup against existing index to find only new clauses
+    // log('Starting staging process into search index');
+    // const staging = await findNewClauses(extracts);
 
-        if (stagingRecords.length > 0) {
-            log(`${fileName} - Running indexer`);
-            await search.indexStaging();
-        }
-
-        return {fileName, clauseRecords: stagingRecords};
-    }));
-
-    await Promise.all(staging.map(async ({fileName, clauseRecords}) => {
-        log(`${fileName} - adding ${clauseRecords.length} new clauses into the clauseLibrary`);
-        const newClauses = await clauseLibrary.add(clauseRecords);
-    }));
+    // // add new clauses to clause library
+    // await Promise.all(staging.map(async ({fileName, clauseRecords}) => {
+    //     log(`${fileName} - adding ${clauseRecords.length} new clauses into the clauseLibrary`);
+    //     const newClauses = await clauseLibrary.add(clauseRecords);
+    // }));
     
     logHeader('All extractions finished!');
 }
 
 extract();
+
