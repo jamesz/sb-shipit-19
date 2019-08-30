@@ -6,9 +6,7 @@
   "scripts": {
     "start": "export LOAD_TYPE=full && node src/index.js",
     "start_samples": "export LOAD_TYPE=samples && node src/index.js",
-    "database": "node src/database.js",
     "crack_documents": "node src/crack_documents.js",
-    "extract_with_google": "node src/extract_with_google.js",
     "extract_with_regex": "node src/extract_with_regex.js",
     "test": "test",
     "uuid": "node src/uuid.js"
